@@ -2,7 +2,7 @@ services:
   - type: web
     name: weathersense-backend
     env: python
-    buildCommand: cd backend && pip install -r requirements.txt && python clothing_model.py
+    buildCommand: cd backend && pip install --upgrade pip && pip install --only-binary=all -r requirements.txt && python clothing_model.py
     startCommand: cd backend && python app.py
     healthCheckPath: /
     plan: free
@@ -11,6 +11,6 @@ services:
     rootDir: ./
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.8
+        value: 3.11.0
       - key: PORT
         value: 5000
