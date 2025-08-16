@@ -11,8 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy only the app file
 COPY backend/app.py app.py
 
-# Expose port
-EXPOSE 10000
+# Expose port (Render uses $PORT)
+EXPOSE $PORT
 
-# Run with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
+# Run with gunicorn using the PORT environment variable
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "app:app"]

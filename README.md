@@ -1,5 +1,179 @@
 # WeatherSense - Intelligent Forecast & Outfit Recommender
 
+An intelligent weather application that provides real-time weather data and AI-powered clothing recommendations based on current weather conditions.
+
+## 🌟 Features
+
+- **Real-time Weather Data**: Get current weather information for any city worldwide
+- **5-Day Forecast**: View detailed weather forecasts for the next 5 days
+- **AI Clothing Recommendations**: Get intelligent outfit suggestions based on temperature and weather conditions
+- **Air Quality Index**: Monitor air pollution levels in your area
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+
+## 🚀 Live Demo
+
+**GitHub Pages (Frontend)**: [https://sreeharshajp.github.io/WeatherSense-Intelligent-Forecast-Outfit-Recommender/launcher.html](https://sreeharshajp.github.io/WeatherSense-Intelligent-Forecast-Outfit-Recommender/launcher.html)
+
+**Backend API**: [https://weathersense-api-v2.onrender.com](https://weathersense-api-v2.onrender.com)
+
+## 📱 How to Use
+
+1. **Visit the Launcher Page**: Go to the GitHub Pages link above
+2. **Check Frontend**: Click "Check Frontend" to verify the app is ready
+3. **Wake Up Backend**: Click "Wake Up Backend" to start the API server (may take 30-60 seconds)
+4. **Launch App**: Once both systems are ready, click "Launch WeatherSense App"
+5. **Search for Weather**: Enter any city name and get weather data with clothing recommendations
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **HTML5/CSS3**: Modern responsive design
+- **JavaScript (ES6+)**: Asynchronous API calls and DOM manipulation
+- **Bootstrap 5**: UI components and responsive layout
+- **jQuery**: DOM manipulation and AJAX requests
+- **Font Awesome**: Icons and visual elements
+
+### Backend
+- **Python 3.11**: Core programming language
+- **Flask**: Web framework for REST API
+- **Flask-CORS**: Cross-origin resource sharing
+- **Gunicorn**: WSGI HTTP server for production
+
+### APIs Used
+- **OpenWeatherMap API**: Weather data and forecasts
+- **OpenWeatherMap Air Pollution API**: Air quality information
+
+### Deployment
+- **GitHub Pages**: Frontend hosting
+- **Render.com**: Backend API hosting with Docker
+- **Docker**: Containerized backend deployment
+
+## 🏗️ Project Structure
+
+```
+├── launcher.html          # Landing page with system status checks
+├── index.html            # Main weather application
+├── index.css             # Stylesheet for the main app
+├── index.js              # Frontend JavaScript logic
+├── backend/
+│   ├── app.py           # Flask backend API
+│   └── requirements.txt # Python dependencies
+├── Dockerfile           # Docker configuration for backend
+├── render.yaml          # Render.com deployment config
+└── assets/              # Images and icons
+```
+
+## 🔧 Setup Instructions
+
+### Prerequisites
+- Python 3.11+
+- Git
+- OpenWeatherMap API key
+
+### Local Development
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/sreeharshajp/WeatherSense-Intelligent-Forecast-Outfit-Recommender.git
+   cd WeatherSense-Intelligent-Forecast-Outfit-Recommender
+   ```
+
+2. **Set up the backend**:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python app.py
+   ```
+
+3. **Update API configuration**:
+   - Get your free API key from [OpenWeatherMap](https://openweathermap.org/api)
+   - Replace the API key in `index.js` line 10
+
+4. **Run the frontend**:
+   - Open `index.html` in a web browser
+   - Or use a local server: `python -m http.server 8000`
+
+### GitHub Pages Deployment
+
+1. **Fork/Clone this repository**
+2. **Go to repository Settings → Pages**
+3. **Set source to "Deploy from a branch"**
+4. **Select "main" branch and "/ (root)" folder**
+5. **Your app will be available at**: `https://yourusername.github.io/WeatherSense-Intelligent-Forecast-Outfit-Recommender/launcher.html`
+
+### Backend Deployment (Render.com)
+
+1. **Connect your GitHub repository to Render.com**
+2. **Create a new Web Service**
+3. **Use the included Dockerfile for deployment**
+4. **Update the backend URL in `index.js` and `launcher.html`**
+
+## 🎯 Key Features Explained
+
+### Intelligent Clothing Recommendations
+The AI recommendation system considers:
+- **Temperature ranges**: From extreme cold to extreme heat
+- **Weather conditions**: Rain, snow, fog, wind, clear skies
+- **Regional preferences**: Optimized for various climate zones
+- **Activity suitability**: Recommendations for different activities
+
+### Weather Metrics
+- **Temperature**: Current, feels-like, min/max
+- **Wind**: Speed, direction, gusts
+- **Visibility**: Fog and mist conditions
+- **Air Quality**: NO2, O3, CO, SO2 levels
+
+## 🔗 API Endpoints
+
+### Backend API (`https://weathersense-api-v2.onrender.com`)
+
+- `GET /health` - Health check endpoint
+- `POST /recommend` - Get clothing recommendations
+  ```json
+  {
+    "temperature": 25,
+    "weather_description": "clear sky"
+  }
+  ```
+
+## 📊 Performance Optimizations
+
+- **CDN Integration**: Bootstrap and jQuery loaded from CDN
+- **Asynchronous Loading**: Non-blocking API calls
+- **Error Handling**: Graceful degradation for API failures
+- **Responsive Design**: Optimized for all screen sizes
+- **Production Ready**: Dockerized backend with Gunicorn
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add new feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **OpenWeatherMap**: For providing comprehensive weather APIs
+- **Render.com**: For reliable backend hosting
+- **GitHub Pages**: For frontend hosting
+- **Bootstrap Team**: For the responsive UI framework
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+- Open an issue on GitHub
+- Check the browser console for error messages
+- Ensure your API keys are valid and properly configured
+
+---
+
+**Made with ❤️ by [Sreeharsha JP](https://github.com/sreeharshajp)**
+
 **WeatherSense** is an advanced weather application that combines real-time weather data with intelligent clothing recommendations using machine learning. Get accurate weather forecasts and AI-powered outfit suggestions tailored to current weather conditions.
 
 ## 🌟 Features

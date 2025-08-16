@@ -221,8 +221,14 @@ async function todayTemps(lat, lon) {
 // New function to fetch clothing recommendations
 async function fetchClothingRecommendation(temperature, weather_description) {
     try {
-        // Use production URL for Render deployment, fallback to localhost for development
-        const backendUrl = 'https://weathersense-backend.onrender.com';
+        // Use new production URL for Render deployment
+        const backendUrl = 'https://weathersense-api-v2.onrender.com';
+        
+        console.log('Sending request to backend:', {
+            url: `${backendUrl}/recommend`,
+            temperature: temperature,
+            weather_description: weather_description
+        });
         
         const response = await fetch(`${backendUrl}/recommend`, {
             method: 'POST',
@@ -235,11 +241,17 @@ async function fetchClothingRecommendation(temperature, weather_description) {
             }),
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(`Network response was not ok: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('Received data:', data);
         $('.clothrecom').text(`Recommended Clothes: ${data.recommendation}`);
     } catch (error) {
         console.error('Error fetching clothing recommendation:', error);
