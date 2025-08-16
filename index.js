@@ -25,26 +25,28 @@ async function fetchData() {
         $('#skyDescription').text(responseskyDesciprtion);
 
         
-        // For Time stamps conversion - now uses city's local timezone
-        function dateFormat(unixTimestamp, timezoneOffset) {
-            const date = new Date((unixTimestamp + timezoneOffset) * 1000);
-            return date.toISOString().slice(0, 19).replace('T', ' ');
+        // For Time stamps conversion - uses city's local timezone and formats AM/PM
+        function formatCityTime(unixTimestamp, timezoneOffset) {
+            // unixTimestamp and timezoneOffset are in seconds
+            const utcMillis = unixTimestamp * 1000;
+            const cityMillis = utcMillis + timezoneOffset * 1000;
+            const cityDate = new Date(cityMillis);
+            return cityDate;
         }
 
         // Get timezone offset from API (in seconds)
         let timezoneOffset = formattedData.timezone;
-        
-        let properDate = dateFormat(formattedData.dt, timezoneOffset);
-        let [date, time] = properDate.split(' ');
 
-        $("#date").text(new Date(date).toLocaleDateString());
-        $("#time").text(time);
+        // Main date/time
+        let cityDateObj = formatCityTime(formattedData.dt, timezoneOffset);
+        $("#date").text(cityDateObj.toLocaleDateString());
+        $("#time").text(cityDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
 
-        let sunriseTime = dateFormat(formattedData.sys.sunrise, timezoneOffset).split(' ')[1];
-        let sunsetTime = dateFormat(formattedData.sys.sunset, timezoneOffset).split(' ')[1];
-
-        $("#sunriseTime").text(sunriseTime);
-        $("#sunsetTime").text(sunsetTime);
+        // Sunrise/Sunset
+        let sunriseObj = formatCityTime(formattedData.sys.sunrise, timezoneOffset);
+        let sunsetObj = formatCityTime(formattedData.sys.sunset, timezoneOffset);
+        $("#sunriseTime").text(sunriseObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+        $("#sunsetTime").text(sunsetObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
 
         let lat = formattedData.coord.lat;
         let lon = formattedData.coord.lon;
@@ -225,57 +227,84 @@ async function todayTemps(lat, lon) {
         if (!response.ok) throw new Error("Failed to fetch hourly temperatures");
         const data = await response.json();
 
-        // Get timezone offset for the city
-        const timezoneOffset = data.city.timezone;
+        // Ensure we have forecast data
+        if (!data.list || data.list.length === 0) {
+            throw new Error("No forecast data available");
+        }
+
+        // Get timezone offset for the city (fallback to 0 if not available)
+        const timezoneOffset = data.city && data.city.timezone ? data.city.timezone : 0;
+
+        // Always show the first 6 forecasts to ensure data is visible
+        let todayForecasts = data.list.slice(0, 6);
+
+        let todayHtml = "";
         
-        // Get current date in UTC and adjust for city timezone
+        // Check if we have current day data or next available
         const now = new Date();
-        const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
-        const cityTime = new Date(utcTime + (timezoneOffset * 1000));
-        const todayDate = cityTime.toISOString().split("T")[0];
+        const utcMillis = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const cityMillis = utcMillis + timezoneOffset * 1000;
+        const cityDate = new Date(cityMillis);
+        const todayDate = cityDate.toISOString().split("T")[0];
         
-        // Filter forecasts for today in the city's timezone
-        let todayForecasts = data.list.filter(item => {
+        const hasCurrentDayData = data.list.some(item => {
             const forecastDate = new Date(item.dt * 1000 + timezoneOffset * 1000).toISOString().split("T")[0];
             return forecastDate === todayDate;
         });
-        
-        // If no forecasts for today, take the first few available
-        if (todayForecasts.length === 0) {
-            todayForecasts = data.list.slice(0, 6);
-        } else {
-            todayForecasts = todayForecasts.slice(0, 6);
+
+        if (!hasCurrentDayData) {
+            todayHtml += '<div class="text-center text-info mb-2" style="font-size: 12px;">Showing next available forecasts</div>';
         }
 
-        let todayHtml = "";
         todayForecasts.forEach(item => {
-            // Convert time to city's local time
-            const forecastTime = new Date(item.dt * 1000 + timezoneOffset * 1000);
-            let time = forecastTime.toISOString().substr(11, 5); // HH:MM format
-            
-            let temp = item.main ? item.main.temp.toFixed(1) : 'N/A';
-            let icon = item.weather && item.weather[0] ? item.weather[0].icon : '01d';
+            try {
+                // Convert time to city's local time with better error handling
+                const forecastTime = new Date(item.dt * 1000 + timezoneOffset * 1000);
+                let time = forecastTime.toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: true 
+                });
+                
+                let temp = item.main && item.main.temp ? item.main.temp.toFixed(1) : 'N/A';
+                let icon = item.weather && item.weather[0] && item.weather[0].icon ? item.weather[0].icon : '01d';
 
-            todayHtml += `
-                <div class="todayTemp text-center">
-                    <h6 class="m-0">${time}</h6>
-                    <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="icon" width="35px">
-                    <h5>${temp}&deg;C</h5>
-                </div>
-            `;
+                todayHtml += `
+                    <div class="todayTemp text-center">
+                        <h6 class="m-0">${time}</h6>
+                        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Weather icon" width="35px" onerror="this.src='https://openweathermap.org/img/wn/01d@2x.png'">
+                        <h5>${temp}°C</h5>
+                    </div>
+                `;
+            } catch (itemError) {
+                console.warn("Error processing forecast item:", itemError);
+                // Skip this item and continue with others
+            }
         });
+
+        // Fallback if no HTML was generated
+        if (!todayHtml) {
+            todayHtml = '<div class="text-center text-muted">Forecast data processing...</div>';
+        }
 
         const container = document.getElementById("todayTempContainer");
         if (container) {
             container.innerHTML = todayHtml;
+        } else {
+            console.warn("todayTempContainer element not found");
         }
 
     } catch (error) {
-        console.error(error);
-        // Don't show alert for today temps as it's not critical
+        console.error("Error in todayTemps:", error);
+        // Always show something, even if there's an error
         const container = document.getElementById("todayTempContainer");
         if (container) {
-            container.innerHTML = '<div class="text-center text-muted">Hourly data unavailable</div>';
+            container.innerHTML = `
+                <div class="text-center text-muted">
+                    <div>Unable to load hourly forecast</div>
+                    <div style="font-size: 12px;">Please try refreshing</div>
+                </div>
+            `;
         }
     }
 }
