@@ -1,27 +1,50 @@
-# Use a stable Python version
-FROM python:3.10.12
+# Stage 1: The Builder
+# This stage has all the build tools needed to compile wheels.
+FROM python:3.10.12-buster AS builder
 
-# Set the working directory in the container
+# Install build dependencies
+RUN apt-get update && apt-get install -y build-essential
+
+# Set the working directory
 WORKDIR /usr/src/app
 
-# Install system-level dependencies and build tools
-# This is crucial for compiling packages like scikit-learn
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Install wheel package to build wheels
+RUN pip install --upgrade pip wheel
 
-# Copy the backend application code into the container
+# Copy requirements file
+COPY backend/requirements.txt .
+
+# Build wheels for all dependencies and store them in /wheels
+# This pre-compiles everything.
+RUN pip wheel --no-cache-dir --wheel-dir=/usr/src/app/wheels -r requirements.txt
+
+
+# Stage 2: The Final Image
+# This stage is lightweight and uses the pre-built wheels.
+FROM python:3.10.12-slim
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the pre-built wheels from the builder stage
+COPY --from=builder /usr/src/app/wheels /wheels
+
+# Copy the requirements file
+COPY backend/requirements.txt .
+
+# Install the packages from the local wheels
+# --no-index prevents pip from going to PyPI
+# --find-links points to our local wheel directory
+RUN pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt
+
+# Copy the rest of the application code
 COPY backend/ .
 
-# Install Python dependencies
-# Upgrading pip and installing from requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Run the model training script to generate the .pkl file
+# Run the model training script
 RUN python clothing_model.py
 
-# Expose the port the app will run on
+# Expose the port
 EXPOSE 10000
 
-# Command to run the application using Gunicorn
+# Run the application
 CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
