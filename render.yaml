@@ -1,15 +1,12 @@
 services:
   - type: web
     name: weathersense-backend
-    env: python
-    runtime: python-3.10.12
-    buildCommand: cd backend && pip install --upgrade pip setuptools wheel && pip install -r requirements.txt && python clothing_model.py
-    startCommand: cd backend && python app.py
+    env: docker
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /
     plan: free
     autoDeploy: true
     branch: main
-    rootDir: ./
     envVars:
       - key: PORT
-        value: 5000
+        value: 10000
