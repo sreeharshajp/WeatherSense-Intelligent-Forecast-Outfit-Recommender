@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: weathersense-backend
+    env: python
+    buildCommand: cd backend && pip install -r requirements.txt && python clothing_model.py
+    startCommand: cd backend && python app.py
+    healthCheckPath: /
+    plan: free
+    autoDeploy: true
+    branch: main
+    rootDir: ./
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 5000

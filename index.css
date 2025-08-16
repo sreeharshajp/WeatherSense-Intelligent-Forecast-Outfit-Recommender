@@ -1,0 +1,603 @@
+/* Base Styles */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%), 
+                url("./bg3.png");
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
+    font-family: "Comfortaa", sans-serif;
+    color: white;
+    min-height: 100vh;
+}
+
+/* Alternative beautiful backgrounds you can use by uncommenting */
+/* 
+Sunset Theme:
+background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 50%, #4ecdc4 100%);
+
+Ocean Theme:
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+Night Theme:
+background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2980b9 100%);
+
+Aurora Theme:
+background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d299c2 100%);
+*/
+
+
+.searchBar {
+    height: 10vh;
+    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 100%);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.inputfield {
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+    width: 100%;
+    border-radius: 25px;
+    padding: 15px 50px 15px 20px;
+    font-size: 16px;
+}
+
+.inputfield:focus {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.inputfield::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.searchBarParentDiv {
+    width: 50%;
+    height: fit-content;
+    position: relative;
+}
+
+.SearchIcon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    filter: brightness(0) invert(1);
+    transition: all 0.3s ease;
+}
+
+.SearchIcon:hover {
+    cursor: pointer;
+    transform: translateY(-50%) scale(1.1);
+    filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.8));
+}
+
+.mainContentParentDiv {
+    height: 90vh;
+    display: flex;
+    flex-direction: row; /*setting the flex property we get it side by side 30% left and remain on right*/
+    width: 100%;
+}
+
+.leftDiv {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.leftChild {
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    width: 100%;
+    height: 43vh;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    padding: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.leftChild:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.currentTempDiv h6 {
+    font-size: larger;
+}
+
+#cityName {
+    font-size: x-large;
+}
+
+#cityTemp {
+    font-size: xx-large;
+}
+
+#ComingFiveDaysTitle {
+    font-size: x-large;
+}
+
+.forecastRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.rightDiv {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.rightRow {
+    height: 27vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.extrametric {
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    padding: 15px 12px;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 250px;
+    border-radius: 15px;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.extrametric h6 {
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rowOne {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.rowTwo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.rowTwoDiv {
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    backdrop-filter: blur(20px);
+    width: 48%;
+    min-width: 300px;
+    height: 100%;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.todayTemp {
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+    backdrop-filter: blur(20px);
+    width: fit-content;
+    min-width: 120px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.todayTempParentDiv {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.todayTempParentDiv::-webkit-scrollbar {
+    height: 4px;
+}
+
+.todayTempParentDiv::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.todayTempParentDiv::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+}
+
+/* Icon Animations and Effects */
+.fas, .fab {
+    transition: all 0.3s ease;
+}
+
+.fas:hover, .fab:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
+}
+
+/* Weather Icon Glow Effects */
+.fa-sun {
+    animation: sunGlow 2s ease-in-out infinite alternate;
+}
+
+.fa-moon {
+    animation: moonGlow 3s ease-in-out infinite alternate;
+}
+
+.fa-wind {
+    animation: windSway 2s ease-in-out infinite;
+}
+
+@keyframes sunGlow {
+    from { filter: drop-shadow(0 0 5px #ffd700); }
+    to { filter: drop-shadow(0 0 15px #ffd700); }
+}
+
+@keyframes moonGlow {
+    from { filter: drop-shadow(0 0 3px #87ceeb); }
+    to { filter: drop-shadow(0 0 10px #87ceeb); }
+}
+
+@keyframes windSway {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(3px); }
+}
+
+/* Temperature Display Enhancement */
+#cityTemp {
+    font-size: xx-large;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #ffd700, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#cityName {
+    font-size: x-large;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Forecast Row Improvements */
+.forecastRow {
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 50px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.forecastRow:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+}
+
+.forecastRow h6 {
+    margin: 0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.forecastRow img {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+}
+
+/* Five Days Forecast Container */
+.next5days {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.next5days .d-flex.flex-column {
+    gap: 8px;
+    max-height: calc(43vh - 80px);
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Custom Scrollbar */
+.next5days .d-flex.flex-column::-webkit-scrollbar {
+    width: 4px;
+}
+
+.next5days .d-flex.flex-column::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.next5days .d-flex.flex-column::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+}
+
+.next5days .d-flex.flex-column::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+/* Media Queries for responsive design */
+
+/* Large tablets and small desktops */
+@media only screen and (max-width: 1200px) {
+    .extrametric {
+        min-width: 180px;
+        max-width: 220px;
+        padding: 12px 10px;
+    }
+    
+    .extrametric h6 {
+        font-size: 0.8rem;
+    }
+    
+    .rowTwoDiv {
+        min-width: 280px;
+    }
+}
+
+/* Medium tablets */
+@media only screen and (max-width: 992px) {
+    .mainContentParentDiv {
+        flex-direction: column;
+        height: auto;
+        min-height: 90vh;
+    }
+    
+    .leftDiv {
+        width: 100%;
+        flex-direction: row;
+        height: auto;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .leftChild {
+        width: 48%;
+        height: 50vh;
+        min-height: 400px;
+    }
+    
+    .rightDiv {
+        width: 100%;
+        padding: 10px;
+        gap: 15px;
+    }
+    
+    .rowOne {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .extrametric {
+        min-width: 160px;
+        max-width: 200px;
+    }
+    
+    .rowTwoDiv {
+        width: 48%;
+        min-width: 250px;
+    }
+}
+
+/* Small tablets and large phones */
+@media only screen and (max-width: 768px) {
+    .searchBarParentDiv {
+        width: 85%;
+    }
+    
+    .leftDiv {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .leftChild {
+        width: 100%;
+        height: 45vh;
+        min-height: 350px;
+    }
+    
+    .rowOne {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .extrametric {
+        width: 100%;
+        max-width: none;
+        min-width: auto;
+    }
+    
+    .rowTwo {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .rowTwoDiv {
+        width: 100%;
+        min-width: auto;
+        height: auto;
+        min-height: 200px;
+    }
+    
+    .todayTempParentDiv {
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+    
+    .todayTemp {
+        min-width: 100px;
+        flex-shrink: 0;
+    }
+    
+    .clothrecom {
+        font-size: 12px !important;
+        line-height: 1.3;
+    }
+}
+
+/* Mobile phones */
+@media only screen and (max-width: 576px) {
+    .searchBarParentDiv {
+        width: 90%;
+    }
+    
+    .inputfield {
+        padding: 12px 45px 12px 15px;
+        font-size: 14px;
+    }
+    
+    body {
+        font-size: 14px;
+    }
+    
+    .leftChild {
+        height: 40vh;
+        min-height: 300px;
+        padding: 12px;
+    }
+    
+    #cityTemp {
+        font-size: x-large !important;
+    }
+    
+    #cityName {
+        font-size: large !important;
+    }
+    
+    .extrametric {
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .extrametric h6 {
+        font-size: 0.75rem;
+    }
+    
+    .rowTwoDiv {
+        padding: 15px;
+        min-height: 180px;
+    }
+    
+    .todayTemp {
+        min-width: 90px;
+        padding: 12px;
+    }
+    
+    .todayTemp h6 {
+        font-size: 0.75rem;
+    }
+    
+    .todayTemp h5 {
+        font-size: 1rem;
+    }
+    
+    .forecastRow {
+        padding: 6px 8px;
+        min-height: 45px;
+    }
+    
+    .forecastRow h6 {
+        font-size: 0.8rem;
+    }
+    
+    .forecastRow img {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .clothrecom {
+        font-size: 11px !important;
+    }
+    
+    .fas, .fab {
+        font-size: 16px !important;
+    }
+}
+
+/* Extra small phones */
+@media only screen and (max-width: 400px) {
+    .searchBarParentDiv {
+        width: 95%;
+    }
+    
+    .leftChild {
+        height: 35vh;
+        min-height: 280px;
+        padding: 10px;
+    }
+    
+    .extrametric {
+        padding: 8px;
+    }
+    
+    .extrametric h6 {
+        font-size: 0.7rem;
+    }
+    
+    .todayTemp {
+        min-width: 80px;
+        padding: 10px;
+    }
+    
+    .rowTwoDiv {
+        padding: 12px;
+        min-height: 160px;
+    }
+    
+    .clothrecom {
+        font-size: 10px !important;
+    }
+}
