@@ -1,254 +1,293 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Weather ForeCast</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-    <!-- Font Awesome Icons -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherSense - Intelligent Forecast & Outfit Recommender</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="index.css">
-
-  </head >
-  <body>
-
-    <div class="searchBar">
-        <!--created a div because weare palcing the input field insise the searchBar
-        and also we are handling the input inside a div again to make changes searchBarParentDiv-->
-
-        <div class="searchBarParentDiv"> 
-            <input type="text" class="inputfield" placeholder="Search City">
-            <!-- search icon should be inside the input field so inside the div there-->
-              <img src="./search.png" alt="search" width="35px" class="SearchIcon">
-        </div>
-    </div>
-
-    <div class="mainContentParentDiv">
-      <!-- inside the mian content of 90%vh and inside the left is 30% and rightside is70%-->
-      <div class="leftDiv">
-        <!-- in left we have 2 sections one is tempearture stuff column and next 5 days forecast-->
-
-        <div class="currentTempDiv leftChild p-3 d-flex flex-column gap-2">
-          <h6 class="m-0" id="cityName">City Name</h6>
-          <h5 class="m-0"><span id="cityTemp">0&deg;C</span></h5>
-          <h6 class="m-0" id="skyDescription">Sky Description</h6>
-          <hr class="line">
-          <div class="d-flex gap-2">
-            <i class="fas fa-calendar-alt" style="color: #ffd700; font-size: 20px; margin-top: 2px;"></i>
-            <h6 class="m-0" id="date"> Date</h6>
-          </div>
-          <div class="d-flex gap-2">
-            <i class="fas fa-clock" style="color: #87ceeb; font-size: 20px; margin-top: 2px;"></i>
-            <h6 class="m-0" id="time">Time</h6>
-          </div>
-
-          <div class="d-flex gap-2">
-            <div>
-              <i class="fas fa-tshirt" style="color: #98fb98; font-size: 20px; margin-top: 2px;"></i>
-            </div>
-            
-            <h6 class="clothrecom" style="font-size: 13px;">Recommended Clothes: Recommendation Model Integration is not done yet.</h6>
-
-          </div>
-
-        </div>
-
-
-        <div class="next5days leftChild p-3 d-flex flex-column gap-2" id="forecastContainer">  
-          <h6 class="m-0" id="ComingFiveDaysTitle">Coming 5 Days</h6>
-          <div class="d-flex flex-column gap-2">
-              <div class="forecastRow d-flex align-items-center justify-content-between">
-                <div class="d-flex gap-2 align-items-center">
-                  <img src="./cloud.png" alt="" width="35px">
-                  <h6> 7&deg;C</h6>
-                </div>
-                <h6 class="m-0"> Day</h6>
-                <h6 class="m-0">23-04-2025</h6>
-              </div>
-
-              <div class="forecastRow d-flex align-items-center justify-content-between">
-                <div class="d-flex gap-2 align-items-center">
-                  <img src="./cloud.png" alt="" width="35px">
-                  <h6> 7&deg;C</h6>
-                </div>
-                <h6 class="m-0"> Day</h6>
-                <h6 class="m-0">23-04-2025</h6>
-              </div>
-
-              <div class="forecastRow d-flex align-items-center justify-content-between">
-                <div class="d-flex gap-2 align-items-center">
-                  <img src="./cloud.png" alt="" width="35px">
-                  <h6> 7&deg;C</h6>
-                </div>
-                <h6 class="m-0"> Day</h6>
-                <h6 class="m-0">23-04-2025</h6>
-              </div>
-
-              <div class="forecastRow d-flex align-items-center justify-content-between">
-                <div class="d-flex gap-2 align-items-center">
-                  <img src="./cloud.png" alt="" width="35px">
-                  <h6> 7&deg;C</h6>
-                </div>
-                <h6 class="m-0"> Day</h6>
-                <h6 class="m-0">23-04-2025</h6>
-              </div>
-
-              <div class="forecastRow d-flex align-items-center justify-content-between">
-                <div class="d-flex gap-2 align-items-center">
-                  <img src="./cloud.png" alt="" width="35px">
-                  <h6> 7&deg;C</h6>
-                </div>
-                <h6 class="m-0">Day</h6>
-                <h6 class="m-0">23-04-2025</h6>
-              </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="rightDiv">
-        <!-- here we are having the 3 rows so create the 3 div conatiners and for content again divs individually for them-->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         
-        <div class="rightRow rowOne d-flex gap-2 align-items-center justify-content-between">
-            <!-- Wind Speed -->
-            <div class="extrametric d-flex gap-3">
-              <i class="fas fa-wind" style="color: #87ceeb; font-size: 30px;"></i>
-              <div>
-                <h6 class="m-0">Wind Speed</h6>
-                <h6 class="m-0">Metric Value</h6>
-              </div>
-            </div>
-
-            <!-- Wind Direction -->
-            <div class="extrametric d-flex gap-3">
-             <i class="fas fa-compass" style="color: #ffa500; font-size: 30px;"></i>
-              <div>
-                <h6 class="m-0">Wind Direction</h6>
-                <h6 class="m-0">Metric Value</h6>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+        }
+        
+        .status-loading {
+            background-color: #FF9800;
+            box-shadow: 0 0 8px #FF9800;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-offline {
+            background-color: #f44336;
+            box-shadow: 0 0 8px #f44336;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .loading-spinner {
+            display: none;
+            margin: 1rem auto;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-8 col-md-10">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h1 class="text-white fw-bold mb-3">
+                        <i class="fas fa-cloud-sun"></i> WeatherSense
+                    </h1>
+                    <p class="text-white-50 fs-5">Intelligent Forecast & Smart Outfit Recommendations</p>
                 </div>
-            </div>
-
-             <!-- Wind Gust -->
-            <div class="extrametric d-flex gap-3">
-              <i class="fas fa-tornado" style="color: #ff6b6b; font-size: 30px;"></i>
-              <div>
-                 <h6 class="m-0">Wind Gust</h6>
-                 <h6 class="m-0">Metric Value</h6>
-              </div>
-            </div>
-
-            <!-- Forecast Date and Time -->
-            <div class="extrametric d-flex gap-3">
-              <i class="fas fa-clock" style="color: #98fb98; font-size: 30px;"></i>
-              <div>
-                <h6 class="m-0">Forecast Date & Time</h6>
-                <h6 class="m-0">Metric Value</h6>
-              </div>
-            </div>
-      </div>
-
-
-
-        <div class="rightRow rowTwo d-flex flex-wrap justify-content-between align-items-stretch gap-3">
-          <!-- AQI Section -->
-          <div class="AQI rowTwoDiv p-3 d-flex flex-column gap-3 flex-grow-1" style="min-width: 300px;">
-              <h5><i class="fas fa-lungs" style="color: #ff6b6b; margin-right: 10px;"></i>Air Quality Index (AQI)</h5>
-               <div class="d-flex align-items-center justify-content-between">
-                        <i class="fas fa-smog" style="color: #ddd; font-size: 30px;"></i>
-                        <div class="text-center">
-                            <h6 id="co">CO</h6>
-                            <h6 id="coValue">-</h6>
-                        </div>
-                        <div class="text-center">
-                            <h6 id="so2">SO2</h6>
-                            <h6 id="so2Value">-</h6>
-                        </div>
-                        <div class="text-center">
-                            <h6 id="o3">O3</h6>
-                            <h6 id="o3Value">-</h6>
-                        </div>
-                        <div class="text-center">
-                            <h6 id="no2">NO2</h6>
-                            <h6 id="no2Value">-</h6>
+                
+                <!-- Main Cards -->
+                <div class="row">
+                    <!-- Frontend Card -->
+                    <div class="col-md-6">
+                        <div class="glass-card text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <h3 class="text-white mb-3">Weather App</h3>
+                            <p class="text-white-50 mb-4">
+                                Beautiful, responsive weather application with real-time data and 5-day forecasts
+                            </p>
+                            <div class="mb-3">
+                                <span class="status-indicator status-online" id="frontend-status"></span>
+                                <span class="text-white-50">Frontend Ready</span>
+                            </div>
+                            <a href="https://sreeharshajp.github.io/WeatherSense-Intelligent-Forecast-Outfit-Recommender/" 
+                               class="btn-glass" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Open Weather App
+                            </a>
                         </div>
                     </div>
                     
-          </div>
-      
-          <!-- Sunrise/Sunset Section -->
-          <div class="sunRise rowTwoDiv p-3 d-flex flex-column gap-3 flex-grow-1" style="min-width: 300px;">
-              <h5 class="m-0"><i class="fas fa-sun" style="color: #ffd700; margin-right: 10px;"></i>Sunrise & Sunset</h5>
-              <div class="d-flex justify-content-between gap-3">
-                  <div class="sunriseDiv d-flex gap-2 align-items-center">
-                      <i class="fas fa-sun" style="color: #ffd700; font-size: 40px;"></i>
-                      <div class="d-flex flex-column gap-1">
-                          <h6 class="m-0">Sunrise</h6>
-                          <h5 class="m-0" id="sunriseTime">6.00 AM</h5>
-                      </div>
-                  </div>
-                  <div class="sunsetDiv d-flex gap-2 align-items-center">
-                      <i class="fas fa-moon" style="color: #87ceeb; font-size: 35px;"></i>
-                      <div class="d-flex flex-column gap-2">
-                          <h6 class="m-0">Sunset</h6>
-                          <h5 class="m-0" id="sunsetTime">6.00 PM</h5>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      
-
-        <div class="rightRow rowThree d-flex flex-column gap-2">
-          <h5 class="m-0">Today</h5>
-          <div class="d-flex justify-content-between todayTempParentDiv" id="todayTempContainer">
-              <div class="todayTemp">
-                <h6 class="m-0"> 9.00 Am</h6>
-                <img src="./cloudy.png" alt="" width="35px">
-                <h5> 15 &deg; C</h5>
-              </div>
-
-              <div class="todayTemp">
-                <h6 class="m-0"> 9.00 Am</h6>
-                <img src="./cloudy.png" alt="" width="35px">
-                <h5> 15 &deg; C</h5>
-              </div>
-
-              <div class="todayTemp">
-                <h6 class="m-0"> 9.00 Am</h6>
-                <img src="./cloudy.png" alt="" width="35px">
-                <h5> 15 &deg; C</h5>
-              </div>
-
-              <div class="todayTemp">
-                <h6 class="m-0"> 9.00 Am</h6>
-                <img src="./cloudy.png" alt="" width="35px">
-                <h5> 15 &deg; C</h5>
-              </div>
-
+                    <!-- Backend Card -->
+                    <div class="col-md-6">
+                        <div class="glass-card text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h3 class="text-white mb-3">Smart Backend</h3>
+                            <p class="text-white-50 mb-4">
+                                Rule-based server that provides intelligent clothing recommendations
+                            </p>
+                            <div class="mb-3">
+                                <span class="status-indicator status-offline" id="backend-status"></span>
+                                <span class="text-white-50" id="backend-status-text">Backend Sleeping</span>
+                            </div>
+                            <button class="btn-glass" id="wake-backend-btn" onclick="wakeUpBackend()">
+                                <i class="fas fa-power-off"></i> Wake Up & Test Backend
+                            </button>
+                            <div class="loading-spinner" id="loading-spinner">
+                                <div class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="text-white-50 mt-2">Waking up server...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Launch App Button -->
+                <div class="text-center mt-4">
+                    <button class="btn-glass btn-lg" id="launch-app-btn" onclick="launchFullApp()" disabled>
+                        <i class="fas fa-rocket"></i> Launch Complete WeatherSense App
+                    </button>
+                    <p class="text-white-50 mt-2 small">
+                        <i class="fas fa-info-circle"></i> Backend must be awake for smart recommendations to work
+                    </p>
+                </div>
+                
+                <!-- Features -->
+                <div class="glass-card mt-4">
+                    <h4 class="text-white text-center mb-4">
+                        <i class="fas fa-star"></i> Features
+                    </h4>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <i class="fas fa-thermometer-half text-white fs-1 mb-2"></i>
+                            <h6 class="text-white">Real-time Weather</h6>
+                            <p class="text-white-50 small">Current conditions & 5-day forecasts</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <i class="fas fa-tshirt text-white fs-1 mb-2"></i>
+                            <h6 class="text-white">Smart Clothing Suggestions</h6>
+                            <p class="text-white-50 small">Rule-based outfit recommendations</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <i class="fas fa-mobile-alt text-white fs-1 mb-2"></i>
+                            <h6 class="text-white">Responsive Design</h6>
+                            <p class="text-white-50 small">Works on all devices</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="text-center mt-4">
+                    <p class="text-white-50">
+                        Built with ❤️ by <strong>Sreeharsha JP</strong> | 
+                        <a href="https://github.com/sreeharshajp/WeatherSense-Intelligent-Forecast-Outfit-Recommender" 
+                           class="text-white" target="_blank">
+                            <i class="fab fa-github"></i> View Source
+                        </a>
+                    </p>
+                </div>
             </div>
-
-        </div>
         </div>
     </div>
     
-    
-    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-
-    <!-- for jquery link-->
-     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
-    <script src="index.js" charset="UTF-8"></script>
-    
-  </body>
+    <script>
+        const BACKEND_URL = 'https://weathersense-api-v2.onrender.com';
+        const FRONTEND_URL = './app.html';
+        
+        async function wakeUpBackend() {
+            const statusIndicator = document.getElementById('backend-status');
+            const statusText = document.getElementById('backend-status-text');
+            const wakeBtn = document.getElementById('wake-backend-btn');
+            const launchBtn = document.getElementById('launch-app-btn');
+            const spinner = document.getElementById('loading-spinner');
+            
+            // Show loading state
+            statusIndicator.className = 'status-indicator status-loading';
+            statusText.textContent = 'Waking up server...';
+            wakeBtn.disabled = true;
+            spinner.style.display = 'block';
+            
+            try {
+                // Wake up the backend by making a request
+                const response = await fetch(BACKEND_URL, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    // Success - backend is awake
+                    statusIndicator.className = 'status-indicator status-online';
+                    statusText.textContent = 'Backend Online';
+                    launchBtn.disabled = false;
+                    wakeBtn.innerHTML = '<i class="fas fa-check"></i> Backend Ready';
+                    
+                    // Test the recommendation endpoint
+                    setTimeout(async () => {
+                        try {
+                            const testResponse = await fetch(`${BACKEND_URL}/recommend`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    temperature: 25,
+                                    weather_description: 'clear sky'
+                                })
+                            });
+                            
+                            if (testResponse.ok) {
+                                const data = await testResponse.json();
+                                statusText.textContent = 'Smart Recommendations Ready';
+                                console.log('Test recommendation:', data.recommendation);
+                            }
+                        } catch (error) {
+                            console.log('Recommendation test failed:', error);
+                        }
+                    }, 2000);
+                    
+                } else {
+                    throw new Error('Backend responded with error');
+                }
+            } catch (error) {
+                // Failed to wake up
+                statusIndicator.className = 'status-indicator status-offline';
+                statusText.textContent = 'Backend Failed to Start';
+                wakeBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Try Again';
+                wakeBtn.disabled = false;
+                console.error('Failed to wake backend:', error);
+            }
+            
+            spinner.style.display = 'none';
+        }
+        
+        function launchFullApp() {
+            // Redirect to the main weather app
+            window.location.href = FRONTEND_URL;
+        }
+        
+        // Check backend status on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(BACKEND_URL, { 
+                    method: 'GET',
+                    timeout: 5000 
+                });
+                
+                if (response.ok) {
+                    document.getElementById('backend-status').className = 'status-indicator status-online';
+                    document.getElementById('backend-status-text').textContent = 'Backend Online';
+                    document.getElementById('launch-app-btn').disabled = false;
+                    document.getElementById('wake-backend-btn').innerHTML = '<i class="fas fa-check"></i> Backend Ready';
+                }
+            } catch (error) {
+                // Backend is sleeping or offline - this is expected
+                console.log('Backend is sleeping, wake up required');
+            }
+        });
+    </script>
+</body>
 </html>
-
