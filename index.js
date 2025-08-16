@@ -25,20 +25,23 @@ async function fetchData() {
         $('#skyDescription').text(responseskyDesciprtion);
 
         
-        // For Time stamos conversion this functio usefull.
-        function dateFormat(unixTimestamp) {
-            const date = new Date(unixTimestamp * 1000);
-            return date.toLocaleString();
+        // For Time stamps conversion - now uses city's local timezone
+        function dateFormat(unixTimestamp, timezoneOffset) {
+            const date = new Date((unixTimestamp + timezoneOffset) * 1000);
+            return date.toISOString().slice(0, 19).replace('T', ' ');
         }
 
-        let properDate = dateFormat(formattedData.dt);
-        let [date, time] = properDate.split(', ');
+        // Get timezone offset from API (in seconds)
+        let timezoneOffset = formattedData.timezone;
+        
+        let properDate = dateFormat(formattedData.dt, timezoneOffset);
+        let [date, time] = properDate.split(' ');
 
-        $("#date").text(date);
+        $("#date").text(new Date(date).toLocaleDateString());
         $("#time").text(time);
 
-        let sunriseTime = dateFormat(formattedData.sys.sunrise).split(', ')[1];
-        let sunsetTime = dateFormat(formattedData.sys.sunset).split(', ')[1];
+        let sunriseTime = dateFormat(formattedData.sys.sunrise, timezoneOffset).split(' ')[1];
+        let sunsetTime = dateFormat(formattedData.sys.sunset, timezoneOffset).split(' ')[1];
 
         $("#sunriseTime").text(sunriseTime);
         $("#sunsetTime").text(sunsetTime);
@@ -115,7 +118,8 @@ async function fetchMetrics(lat, lon) {
         const data = await response.json();
 
         // Get wind data from the first forecast entry
-        const wind = data.list[0].wind;
+        const wind = data.list[0].wind || {};
+        const main = data.list[0].main || {};
 
         // Selecting all extrametric containers
         const metrics = document.querySelectorAll('.extrametric');
@@ -129,28 +133,50 @@ async function fetchMetrics(lat, lon) {
         // Clear previous metric values before updating new ones
         metrics.forEach((metricBox) => {
             const h6s = metricBox.querySelectorAll('h6');
-            h6s[1].textContent = ''; // Clear value
+            if (h6s.length >= 2) {
+                h6s[1].textContent = ''; // Clear value
+            }
         });
 
-        // Update Wind Speed
+        // Update Wind Speed (with fallback)
         let metricBox1 = metrics[0].querySelector('div');
-        metricBox1.querySelectorAll('h6')[0].textContent = 'Wind Speed';
-        metricBox1.querySelectorAll('h6')[1].textContent = `${wind.speed} m/s`;
+        if (metricBox1) {
+            let h6s1 = metricBox1.querySelectorAll('h6');
+            if (h6s1.length >= 2) {
+                h6s1[0].textContent = 'Wind Speed';
+                h6s1[1].textContent = wind.speed ? `${wind.speed} m/s` : 'N/A';
+            }
+        }
 
-        // Update Wind Direction
+        // Update Humidity (more useful than wind direction)
         let metricBox2 = metrics[1].querySelector('div');
-        metricBox2.querySelectorAll('h6')[0].textContent = 'Wind Direction';
-        metricBox2.querySelectorAll('h6')[1].textContent = `${wind.deg}°`;
+        if (metricBox2) {
+            let h6s2 = metricBox2.querySelectorAll('h6');
+            if (h6s2.length >= 2) {
+                h6s2[0].textContent = 'Humidity';
+                h6s2[1].textContent = main.humidity ? `${main.humidity}%` : 'N/A';
+            }
+        }
 
-        // Update Wind Gust
+        // Update Feels Like Temperature
         let metricBox3 = metrics[2].querySelector('div');
-        metricBox3.querySelectorAll('h6')[0].textContent = 'Wind Gust';
-        metricBox3.querySelectorAll('h6')[1].textContent = wind.gust ? `${wind.gust} m/s` : 'N/A';
+        if (metricBox3) {
+            let h6s3 = metricBox3.querySelectorAll('h6');
+            if (h6s3.length >= 2) {
+                h6s3[0].textContent = 'Feels Like';
+                h6s3[1].textContent = main.feels_like ? `${main.feels_like.toFixed(1)}°C` : 'N/A';
+            }
+        }
 
-        // Update Forecast Time
+        // Update Visibility
         let metricBox4 = metrics[3].querySelector('div');
-        metricBox4.querySelectorAll('h6')[0].textContent = 'Forecast Date &Time';
-        metricBox4.querySelectorAll('h6')[1].textContent = data.list[0].dt_txt;
+        if (metricBox4) {
+            let h6s4 = metricBox4.querySelectorAll('h6');
+            if (h6s4.length >= 2) {
+                h6s4[0].textContent = 'Visibility';
+                h6s4[1].textContent = data.list[0].visibility ? `${(data.list[0].visibility / 1000).toFixed(1)} km` : 'N/A';
+            }
+        }
 
     } catch (error) {
         console.error(error);
@@ -164,15 +190,28 @@ async function fetchAQIData(lat, lon) {
     try {
         let response = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=832c05c13ec70f0f3f55c83726af3247`);
         let formattedData = await response.json();
-        let list = formattedData.list[0].components;
+        
+        if (formattedData.list && formattedData.list[0] && formattedData.list[0].components) {
+            let list = formattedData.list[0].components;
 
-        $("#no2Value").text(list.no2);
-        $("#o3Value").text(list.o3);
-        $("#coValue").text(list.co);
-        $("#so2Value").text(list.so2);
+            $("#no2Value").text(list.no2 ? list.no2.toFixed(2) : 'N/A');
+            $("#o3Value").text(list.o3 ? list.o3.toFixed(2) : 'N/A');
+            $("#coValue").text(list.co ? list.co.toFixed(2) : 'N/A');
+            $("#so2Value").text(list.so2 ? list.so2.toFixed(2) : 'N/A');
+        } else {
+            // Set all to N/A if data is not available
+            $("#no2Value").text('N/A');
+            $("#o3Value").text('N/A');
+            $("#coValue").text('N/A');
+            $("#so2Value").text('N/A');
+        }
     } catch (error) {
         console.error("Error fetching AQI data: ", error);
-        alert("Failed to load AQI data.");
+        // Set fallback values instead of showing alert
+        $("#no2Value").text('N/A');
+        $("#o3Value").text('N/A');
+        $("#coValue").text('N/A');
+        $("#so2Value").text('N/A');
     }
 }
 
@@ -186,19 +225,36 @@ async function todayTemps(lat, lon) {
         if (!response.ok) throw new Error("Failed to fetch hourly temperatures");
         const data = await response.json();
 
-        let todayDate = new Date().toISOString().split("T")[0];
-        let todayForecasts = data.list.filter(item => item.dt_txt.startsWith(todayDate));
-        let selectedHours = todayForecasts.slice(0, 6);
+        // Get timezone offset for the city
+        const timezoneOffset = data.city.timezone;
+        
+        // Get current date in UTC and adjust for city timezone
+        const now = new Date();
+        const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const cityTime = new Date(utcTime + (timezoneOffset * 1000));
+        const todayDate = cityTime.toISOString().split("T")[0];
+        
+        // Filter forecasts for today in the city's timezone
+        let todayForecasts = data.list.filter(item => {
+            const forecastDate = new Date(item.dt * 1000 + timezoneOffset * 1000).toISOString().split("T")[0];
+            return forecastDate === todayDate;
+        });
+        
+        // If no forecasts for today, take the first few available
+        if (todayForecasts.length === 0) {
+            todayForecasts = data.list.slice(0, 6);
+        } else {
+            todayForecasts = todayForecasts.slice(0, 6);
+        }
 
         let todayHtml = "";
-        selectedHours.forEach(item => {
-            let time = new Date(item.dt_txt).toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-            let temp = item.main.temp.toFixed(1);
-            let icon = item.weather[0].icon;
+        todayForecasts.forEach(item => {
+            // Convert time to city's local time
+            const forecastTime = new Date(item.dt * 1000 + timezoneOffset * 1000);
+            let time = forecastTime.toISOString().substr(11, 5); // HH:MM format
+            
+            let temp = item.main ? item.main.temp.toFixed(1) : 'N/A';
+            let icon = item.weather && item.weather[0] ? item.weather[0].icon : '01d';
 
             todayHtml += `
                 <div class="todayTemp text-center">
@@ -209,11 +265,18 @@ async function todayTemps(lat, lon) {
             `;
         });
 
-        document.getElementById("todayTempContainer").innerHTML = todayHtml;
+        const container = document.getElementById("todayTempContainer");
+        if (container) {
+            container.innerHTML = todayHtml;
+        }
 
     } catch (error) {
         console.error(error);
-        alert("Failed to retrieve today's temperatures.");
+        // Don't show alert for today temps as it's not critical
+        const container = document.getElementById("todayTempContainer");
+        if (container) {
+            container.innerHTML = '<div class="text-center text-muted">Hourly data unavailable</div>';
+        }
     }
 }
 
