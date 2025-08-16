@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from clothing_model import get_clothing_recommendation
+from clothing_model_simple import get_clothing_recommendation
 from flask_cors import CORS
 import os
 
