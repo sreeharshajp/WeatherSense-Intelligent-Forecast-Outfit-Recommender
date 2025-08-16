@@ -8,7 +8,7 @@ CORS(app)
 def get_clothing_recommendation(temperature, weather_description):
     """
     Intelligent rule-based clothing recommendation system
-    Optimized for Indian weather patterns
+    Optimized for Indian weather patterns - Updated for deployment fix
     """
     try:
         temp = float(temperature)

@@ -4,11 +4,14 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Copy backend files
-COPY backend/ .
+# Copy requirements first for better caching
+COPY backend/requirements.txt .
 
 # Install dependencies (minimal, no ML packages)
 RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy only the necessary app files (not the old ML model)
+COPY backend/app.py .
 
 # Expose port
 EXPOSE 10000
