@@ -1,23 +1,23 @@
-# Use a specific Python version known for ML compatibility
-FROM python:3.10.12-slim
-
-# Set environment variables for Python
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Use a stable Python version
+FROM python:3.10.12
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy only the requirements file to leverage Docker cache
-COPY backend/requirements.txt .
+# Install system-level dependencies and build tools
+# This is crucial for compiling packages like scikit-learn
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Copy the rest of the backend application code
+# Copy the backend application code into the container
 COPY backend/ .
 
-# Run the model training script during the build
+# Install Python dependencies
+# Upgrading pip and installing from requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Run the model training script to generate the .pkl file
 RUN python clothing_model.py
 
 # Expose the port the app will run on
