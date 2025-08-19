@@ -75,7 +75,7 @@ async function fetchData() {
         fetchAQIData(lat, lon);
         nextFiveDays(lat, lon);
         todayTemps(lat, lon);
-        fetchMetrics(lat, lon);
+        fetchMetrics(lat, lon, formattedData); // Pass main weather data for visibility
         fetchClothingRecommendation(responseTemp, responseskyDesciprtion);
 
     } catch (error) {
@@ -132,7 +132,7 @@ async function nextFiveDays(lat, lon) {
 
 
 // Metrics one  Right Row 1
-async function fetchMetrics(lat, lon) {
+async function fetchMetrics(lat, lon, mainWeatherData) {
     const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=832c05c13ec70f0f3f55c83726af3247&units=metric`;
 
     try {
@@ -143,6 +143,10 @@ async function fetchMetrics(lat, lon) {
         // Get wind data from the first forecast entry
         const wind = data.list[0].wind || {};
         const main = data.list[0].main || {};
+        
+        // Get visibility from main weather data (current weather API provides this)
+        const visibility = mainWeatherData.visibility;
+        console.log('Visibility data:', visibility, 'meters'); // Debug log
 
         // Selecting all extrametric containers
         const metrics = document.querySelectorAll('.extrametric');
@@ -191,13 +195,13 @@ async function fetchMetrics(lat, lon) {
             }
         }
 
-        // Update Visibility
+        // Update Visibility - now using correct data from main weather API
         let metricBox4 = metrics[3].querySelector('div');
         if (metricBox4) {
             let h6s4 = metricBox4.querySelectorAll('h6');
             if (h6s4.length >= 2) {
                 h6s4[0].textContent = 'Visibility';
-                h6s4[1].textContent = data.list[0].visibility ? `${(data.list[0].visibility / 1000).toFixed(1)} km` : 'N/A';
+                h6s4[1].textContent = visibility ? `${(visibility / 1000).toFixed(1)} km` : 'N/A';
             }
         }
 
