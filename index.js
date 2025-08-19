@@ -25,28 +25,49 @@ async function fetchData() {
         $('#skyDescription').text(responseskyDesciprtion);
 
         
-        // For Time stamps conversion - uses city's local timezone and formats AM/PM
+        // For Time stamps conversion - correctly uses city's local timezone
         function formatCityTime(unixTimestamp, timezoneOffset) {
-            // unixTimestamp and timezoneOffset are in seconds
-            const utcMillis = unixTimestamp * 1000;
-            const cityMillis = utcMillis + timezoneOffset * 1000;
-            const cityDate = new Date(cityMillis);
-            return cityDate;
+            // Create a new Date object from the Unix timestamp
+            // timezoneOffset is the offset from UTC in seconds
+            const utcDate = new Date(unixTimestamp * 1000);
+            
+            // Get UTC time in milliseconds and add the timezone offset
+            const utcTime = utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000);
+            const cityTime = new Date(utcTime + (timezoneOffset * 1000));
+            
+            return cityTime;
         }
 
         // Get timezone offset from API (in seconds)
         let timezoneOffset = formattedData.timezone;
 
-        // Main date/time
+        // Main date/time - show current time in the city
         let cityDateObj = formatCityTime(formattedData.dt, timezoneOffset);
-        $("#date").text(cityDateObj.toLocaleDateString());
-        $("#time").text(cityDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+        $("#date").text(cityDateObj.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        }));
+        $("#time").text(cityDateObj.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        }));
 
-        // Sunrise/Sunset
+        // Sunrise/Sunset - show in city's local time
         let sunriseObj = formatCityTime(formattedData.sys.sunrise, timezoneOffset);
         let sunsetObj = formatCityTime(formattedData.sys.sunset, timezoneOffset);
-        $("#sunriseTime").text(sunriseObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
-        $("#sunsetTime").text(sunsetObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+        $("#sunriseTime").text(sunriseObj.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        }));
+        $("#sunsetTime").text(sunsetObj.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        }));
 
         let lat = formattedData.coord.lat;
         let lon = formattedData.coord.lon;
@@ -240,15 +261,16 @@ async function todayTemps(lat, lon) {
 
         let todayHtml = "";
         
-        // Check if we have current day data or next available
+        // Check if we have current day data or next available (using correct timezone calculation)
         const now = new Date();
-        const utcMillis = now.getTime() + (now.getTimezoneOffset() * 60000);
-        const cityMillis = utcMillis + timezoneOffset * 1000;
-        const cityDate = new Date(cityMillis);
-        const todayDate = cityDate.toISOString().split("T")[0];
+        const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const cityTime = new Date(utcTime + (timezoneOffset * 1000));
+        const todayDate = cityTime.toISOString().split("T")[0];
         
         const hasCurrentDayData = data.list.some(item => {
-            const forecastDate = new Date(item.dt * 1000 + timezoneOffset * 1000).toISOString().split("T")[0];
+            const utcDate = new Date(item.dt * 1000);
+            const utcTimeItem = utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000);
+            const forecastDate = new Date(utcTimeItem + (timezoneOffset * 1000)).toISOString().split("T")[0];
             return forecastDate === todayDate;
         });
 
@@ -258,9 +280,12 @@ async function todayTemps(lat, lon) {
 
         todayForecasts.forEach(item => {
             try {
-                // Convert time to city's local time with better error handling
-                const forecastTime = new Date(item.dt * 1000 + timezoneOffset * 1000);
-                let time = forecastTime.toLocaleTimeString([], { 
+                // Convert time to city's local time with correct timezone calculation
+                const utcDate = new Date(item.dt * 1000);
+                const utcTime = utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000);
+                const forecastTime = new Date(utcTime + (timezoneOffset * 1000));
+                
+                let time = forecastTime.toLocaleTimeString('en-US', { 
                     hour: '2-digit', 
                     minute: '2-digit', 
                     hour12: true 
